@@ -1,14 +1,11 @@
+import { FilterQuery, UpdateQuery, QueryOptions } from 'mongoose';
 import {
-  DocumentDefinition,
-  FilterQuery,
-  UpdateQuery,
-  QueryOptions,
-} from 'mongoose';
-import { Product, ProductDocument } from '../models/product.model';
+  Product,
+  ProductDocument,
+  ProductInput,
+} from '../models/product.model';
 
-const createProduct = async (
-  input: DocumentDefinition<Omit<ProductDocument, 'createdAt' | 'updatedAt'>>
-) => {
+const createProduct = async (input: ProductInput) => {
   return Product.create(input);
 };
 

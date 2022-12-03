@@ -41,8 +41,6 @@ async function getUserSessionsHandler(_req: Request, res: Response) {
 async function deleteSessionHandler(_req: Request, res: Response) {
   const sessionId = res.locals.user.session;
 
-  console.log(sessionId);
-
   await updateSession({ _id: sessionId }, { valid: false });
 
   return res.send({
