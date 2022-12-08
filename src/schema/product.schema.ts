@@ -1,5 +1,66 @@
 import { object, string, number, TypeOf } from 'zod';
 
+/**
+ * @openapi
+ * components:
+ *  schemas:
+ *    CreateProductInput:
+ *      type: object
+ *      required:
+ *        - title
+ *        - description
+ *        - price
+ *        - image
+ *      properties:
+ *        title:
+ *          type: string
+ *        description:
+ *          type: string
+ *        price:
+ *          type: number
+ *        image:
+ *          type: string
+ *    CreateProductResponse:
+ *      type: object
+ *      properties:
+ *        title:
+ *          type: string
+ *        description:
+ *          type: string
+ *        price:
+ *          type: string
+ *        image:
+ *          type: string
+ *        _id:
+ *          type: string
+ *        createdAt:
+ *          type: string
+ *        updatedAt:
+ *          type: string
+ */
+
+/**
+ * @openapi
+ * components:
+ *   schemas:
+ *     Product:
+ *       type: object
+ *       required:
+ *        - title
+ *        - description
+ *        - price
+ *        - image
+ *       properties:
+ *         title:
+ *           type: string
+ *         description:
+ *           type: string
+ *         price:
+ *           type: number
+ *         image:
+ *           type: string
+ */
+
 const payload = {
   body: object({
     title: string({

@@ -2,17 +2,14 @@ import { get } from 'lodash';
 import { Request, Response, NextFunction } from 'express';
 import { verifyJwt } from '../utils/jwt';
 import { reIssueAccessToken } from '../service/session.service';
+import { accessTokenCookieOptions } from '../types/cookie';
 
 export const deserializeUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
-  const accessToken = get(req, 'headers.authorization', '').replace(
-    /^Bearer\s/,
-    ''
-  );
-
+  const accessToken = get(req, 'headers.x-auth-token', '') as string;
   const refreshToken = get(req, 'headers.x-refresh');
 
   if (!accessToken) return next();
@@ -27,7 +24,10 @@ export const deserializeUser = async (
   if (expired && refreshToken) {
     const newAccessToken = await reIssueAccessToken(refreshToken as string);
 
-    if (newAccessToken) res.setHeader('x-access-token', newAccessToken);
+    if (newAccessToken) {
+      res.setHeader('x-access-token', newAccessToken);
+      res.cookie('accessToken', newAccessToken, accessTokenCookieOptions);
+    }
 
     const result = verifyJwt(newAccessToken as string, 'accessTokenPublicKey');
 

@@ -1,6 +1,5 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import config from 'config';
 import supertest from 'supertest';
 import mongoose from 'mongoose';
 import { createServer } from '../utils/create-server';
@@ -79,7 +78,7 @@ describe('product', () => {
 
       const { statusCode, body } = await supertest(app)
         .post('/api/products')
-        .set('Authorization', `Bearer ${jwt}`)
+        .set('x-auth-token', `${jwt}`)
         .send(productPayload);
 
       expect(statusCode).toBe(200);

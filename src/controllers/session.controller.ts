@@ -6,26 +6,26 @@ import {
   updateSession,
 } from '../service/session.service';
 import { validatePassword } from '../service/user.service';
-import { signJwt } from '../utils/jwt';
+import log from '../utils/logger';
+import { handleCookieSession } from '../utils/cookie-session';
+import { UserDocument } from '../models/user.model';
+import { SessionDocument } from '../models/session.model';
 
 async function createUserSessionHandler(req: Request, res: Response) {
-  const user = await validatePassword(req.body);
+  const user = (await validatePassword(req.body)) as UserDocument;
 
   if (!user) return res.status(401).send('Invalid email or password');
 
-  const session = await createSession(user._id, req.get('user-agent') || '');
+  const session = (await createSession(
+    user._id,
+    req.get('user-agent') || ''
+  )) as SessionDocument;
 
-  const accessToken = signJwt(
-    { ...user, session: session._id },
-    'accessTokenPrivateKey',
-    { expiresIn: config.get('accessTokenTtl') }
-  );
-
-  const refreshToken = signJwt(
-    { ...user, session: session._id },
-    'refreshTokenPrivateKey',
-    { expiresIn: config.get('refreshTokenTtl') }
-  );
+  const { accessToken, refreshToken } = handleCookieSession({
+    res,
+    user,
+    session,
+  });
 
   return res.send({ accessToken, refreshToken });
 }

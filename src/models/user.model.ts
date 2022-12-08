@@ -9,6 +9,7 @@ export interface UserInput {
 }
 
 export interface UserDocument extends UserInput, mongoose.Document {
+  profile: string;
   createdAt: Date;
   updatedAt: Date;
   comparePassword(currentPassword: string): Promise<Boolean>;
@@ -31,6 +32,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+
+    profile: { type: String },
   },
   {
     timestamps: true,

@@ -4,17 +4,43 @@ import {
   ProductDocument,
   ProductInput,
 } from '../models/product.model';
+import { databaseResponseTimeHistogram } from '../utils/metrics';
 
-const createProduct = async (input: ProductInput) => {
-  return Product.create(input);
-};
+async function createProduct(input: ProductInput) {
+  const metricsLabels = {
+    operation: 'createProduct',
+  };
 
-const findProduct = async (
+  const timer = databaseResponseTimeHistogram.startTimer();
+  try {
+    const result = await Product.create(input);
+    timer({ ...metricsLabels, success: 'true' });
+    return result;
+  } catch (e) {
+    timer({ ...metricsLabels, success: 'false' });
+    throw e;
+  }
+}
+
+async function findProduct(
   query: FilterQuery<ProductDocument>,
   options: QueryOptions = { lean: true }
-) => {
-  return Product.findOne(query, {}, options);
-};
+) {
+  const metricsLabels = {
+    operation: 'findProduct',
+  };
+
+  const timer = databaseResponseTimeHistogram.startTimer();
+  try {
+    const result = await Product.findOne(query, {}, options);
+    timer({ ...metricsLabels, success: 'true' });
+    return result;
+  } catch (e) {
+    timer({ ...metricsLabels, success: 'false' });
+
+    throw e;
+  }
+}
 
 const findAndUpdateProduct = async (
   query: FilterQuery<ProductDocument>,

@@ -8,4 +8,5 @@ export default {
   saltWorkFactor: process.env.SALT_WORK_FACTOR,
   dbUri: process.env.DB_CONNECTION,
   port: process.env.PORT,
+  origin: process.env.ORIGIN,
 };

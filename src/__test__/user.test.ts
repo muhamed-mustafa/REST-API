@@ -117,6 +117,7 @@ describe('user', () => {
 
         const res = {
           send,
+          cookie: () => {},
         };
 
         // @ts-ignore
